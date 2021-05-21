@@ -1,7 +1,7 @@
 ﻿
 namespace Encryption
 {
-    partial class Form1
+    partial class frmMain
     {
         /// <summary>
         ///  Required designer variable.
@@ -116,11 +116,11 @@ namespace Encryption
             this.rbDecrypt.UseVisualStyleBackColor = true;
             this.rbDecrypt.CheckedChanged += new System.EventHandler(this.rbDecrypt_CheckedChanged);
             // 
-            // Form1
+            // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(390, 172);
             this.Controls.Add(this.rbDecrypt);
             this.Controls.Add(this.rbEncrypt);
             this.Controls.Add(this.tbxPassword);
@@ -129,8 +129,7 @@ namespace Encryption
             this.Controls.Add(this.btnBrowse);
             this.Controls.Add(this.tbxPath);
             this.Controls.Add(this.lblPath);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "frmMain";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

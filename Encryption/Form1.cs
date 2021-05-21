@@ -12,9 +12,9 @@ using System.IO;
 
 namespace Encryption
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
         }
@@ -128,12 +128,17 @@ namespace Encryption
         //Save Method
         private void SaveFile(byte[] inByte)
         {
-            string ext = Path.GetExtension(tbxPath.Text);
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Files (*" + ext + ") | *" + ext;
-            if(sfd.ShowDialog() == DialogResult.OK)
+            //Remove original file
+            File.Delete(tbxPath.Text);
+
+            //Save File
+            if (rbEncrypt.Checked)
             {
-                File.WriteAllBytes(sfd.FileName, inByte);                
+                File.WriteAllBytes(tbxPath.Text + ".enc", inByte);
+            }
+            else
+            {
+                File.WriteAllBytes(tbxPath.Text.Replace(".enc",""), inByte);
             }
         }
         
@@ -202,13 +207,13 @@ namespace Encryption
                     SaveFile(chipherByte);
                     MessageBox.Show("File has been succesfully decrypted");
                 }
+                tbxPath.Text = "";
             }
             catch
             {
                 MessageBox.Show("File is in use");
                 return;
-            }
-            
+            }            
         }
     }
 }
