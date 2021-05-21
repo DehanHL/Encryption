@@ -19,9 +19,10 @@ namespace Encryption
             InitializeComponent();
         }
 
-        //AES Global Variables
-        CspParameters cssp = new CspParameters();
-        RSACryptoServiceProvider rsa;
+        //AES
+        AesCryptoServiceProvider aes = new AesCryptoServiceProvider();
+        const string aesKey = "AXe8YwuIn1zxt3FPWTZFlAa14EHdPAdN9FaZ9RQWihc=";
+        const string aesVector = "bsxnWolsAyO7kCfWuyrnqg==";
 
         //Method to generate SHA256 hash from string
         private byte[] getHash(string pass)
@@ -76,17 +77,53 @@ namespace Encryption
             return result;
         }
 
-       /* public byte[] AesEnc(byte[] inByte)
+        //Encrypting AES
+        public byte[] AesEnc(byte[] inByte)
         {
             byte[] result = new byte[inByte.Length];
 
-            Aes aes = Aes.Create();
-            ICryptoTransform cTrans = aes.CreateEncryptor();
+            aes.Key = Convert.FromBase64String(aesKey);
+            aes.IV = Convert.FromBase64String(aesVector);
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
 
-            byte[] eKey = RSA.Encrypt(aes.Key, false);
+            ICryptoTransform trans = aes.CreateEncryptor(aes.Key, aes.IV);
 
+            using (MemoryStream mstream = new MemoryStream())
+            {
+                using (CryptoStream cstream = new CryptoStream(mstream, trans, CryptoStreamMode.Write))
+                {
+                    cstream.Write(inByte, 0, inByte.Length);
+                    cstream.Close();
+                }
+                result = mstream.ToArray();
+            }
+                return result;
+        }
+
+        //Decrypting AES
+        public byte[] AesDec(byte[] inByte)
+        {
+            byte[] result = new byte[inByte.Length];
+
+            aes.Key = Convert.FromBase64String(aesKey);
+            aes.IV = Convert.FromBase64String(aesVector);
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
+
+            ICryptoTransform trans = aes.CreateDecryptor(aes.Key, aes.IV);
+
+            using (MemoryStream mstream = new MemoryStream())
+            {
+                using (CryptoStream cstream = new CryptoStream(mstream, trans, CryptoStreamMode.Write))
+                {
+                    cstream.Write(inByte, 0, inByte.Length);
+                    cstream.Close();
+                }
+                result = mstream.ToArray();
+            }            
             return result;
-        }*/
+        }
 
         //Save Method
         private void SaveFile(byte[] inByte)
@@ -153,13 +190,15 @@ namespace Encryption
                 if (rbEncrypt.Checked)
                 {                    
                     byte[] chipherByte = CipherEnc(FileByte);
-                    SaveFile(chipherByte);
+                    byte[] aesByte = AesEnc(chipherByte);
+                    SaveFile(aesByte);
                     MessageBox.Show("File has been succesfully encrypted");
                 }
                 //Decrypt
                 else
                 {
-                    byte[] chipherByte = CipherDec(FileByte);
+                    byte[] aesByte = AesDec(FileByte);
+                    byte[] chipherByte = CipherDec(aesByte);                    
                     SaveFile(chipherByte);
                     MessageBox.Show("File has been succesfully decrypted");
                 }
