@@ -43,8 +43,8 @@ namespace Encryption
             for (int i = 0; i < inByte.Length; i++)
             {
                 index = index % abc.Length;
-                int shift = (int)abc[index] - 65;
-                result[i] = (byte)(((int)inByte[i] + shift) % 256);
+                int shift = abc[index] - 65;
+                result[i] = (byte)((inByte[i] + shift) % 256);
                 index++;
 
                 if (i == 256)
@@ -65,8 +65,8 @@ namespace Encryption
             for (int i = 0; i < inByte.Length; i++)
             {
                 index = index % abc.Length;
-                int shift = (int)abc[index] - 65;
-                result[i] = (byte)(((int)inByte[i] + 256 - shift) % 256);
+                int shift = abc[index] - 65;
+                result[i] = (byte)((inByte[i] + 256 - shift) % 256);
                 index++;
 
                 if (i == 256)
